@@ -1,0 +1,10 @@
+/* Inline SVG icon set used across the app. */
+export const Icon = {
+  route: (p) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><circle cx="3.5" cy="12.5" r="2" stroke="currentColor" strokeWidth="1.4"/><circle cx="12.5" cy="3.5" r="2" stroke="currentColor" strokeWidth="1.4"/><path d="M5.5 11.5c5-1 5-6 1-7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="0.5 2.4"/></svg>,
+  doc:   (p) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M4 2h5l3 3v9H4z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M9 2v3h3M6 8h4M6 11h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  clock: (p) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  pin:   (p) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M8 1.5c-2.5 0-4.5 2-4.5 4.5 0 3.3 4.5 8.5 4.5 8.5s4.5-5.2 4.5-8.5C12.5 3.5 10.5 1.5 8 1.5Z" stroke="currentColor" strokeWidth="1.4"/><circle cx="8" cy="6" r="1.6" stroke="currentColor" strokeWidth="1.4"/></svg>,
+  gauge: (p) => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M2.5 11a6 6 0 1 1 11 0" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><path d="M8 8.5 11 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>,
+  arrow: (p) => <svg width="14" height="14" viewBox="0 0 14 14" fill="none" {...p}><path d="M3 7h8M7.5 3.5 11 7l-3.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  share: (p) => <svg width="15" height="15" viewBox="0 0 15 15" fill="none" {...p}><circle cx="4" cy="7.5" r="1.8" stroke="currentColor" strokeWidth="1.3"/><circle cx="11" cy="3.5" r="1.8" stroke="currentColor" strokeWidth="1.3"/><circle cx="11" cy="11.5" r="1.8" stroke="currentColor" strokeWidth="1.3"/><path d="M5.6 6.7 9.4 4.3M5.6 8.3l3.8 2.4" stroke="currentColor" strokeWidth="1.3"/></svg>,
+}
