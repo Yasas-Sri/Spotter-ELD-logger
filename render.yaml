@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: spotter-eld-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true       # Render generates a strong secret
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        sync: false               # paste your Neon pooled connection string
+      - key: ORS_API_KEY
+        sync: false               # your OpenRouteService key
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false               # https://<your-web-service>.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false               # https://<your-web-service>.onrender.com
+
+  - type: web
+    name: spotter-eld-web
+    runtime: static
+    rootDir: frontend
+    plan: free
+    buildCommand: "npm ci && npm run build"
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false               # https://<your-api-service>.onrender.com
+    routes:
+      - type: rewrite             # SPA: every path serves index.html (so /trip/:id refreshes work)
+        source: /*
+        destination: /index.html
