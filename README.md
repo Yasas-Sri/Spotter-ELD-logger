@@ -12,12 +12,9 @@ drawn on a 24-hour grid.
 
 ---
 
-## Live deliverables
+## Live deliverable
 
-- **App:** `https://<your-web-service>.onrender.com`
-- **API:** `https://<your-api-service>.onrender.com`
-- **Repo:** this repository
-- **Loom:** `<link>`
+- **App:** `https://spotter-eld-web.onrender.com/`
 
 ---
 
@@ -30,9 +27,42 @@ Property-carrying driver, **70 hr / 8 day** cycle, no adverse conditions:
 - 10 consecutive hours off duty resets the 11- and 14-hour clocks
 - 70 hr / 8 day cycle (seeded by `current_cycle_used`) · 34-hour restart
 
-**Assumptions** (stated per the assignment): avg speed 55 mph · fuel stop every 1,000 mi
-(1 hr on-duty) · 1 hr pickup + 1 hr dropoff. **Known limitation:** split sleeper-berth is
-not modeled — only full 10-hour off-duty rests.
+---
+
+## Assumptions & limitations
+
+The assignment left some operational details unspecified, so the following were assumed.
+They are deliberate, documented choices — not gaps:
+
+**Driving & timing**
+- **Average speed 55 mph** — no speed was given, so drive time is derived from distance at a
+  constant 55 mph. (Real ORS distance is used; only the *time* is normalized to this speed so
+  the map summary and the HOS logs never disagree.)
+- **Trip start time** defaults to the driver's current local time, or an optional explicit
+  **Departure** datetime from the form.
+
+**On-duty events (per the brief)**
+- **Fuel stop every 1,000 miles**, modeled as **1 hour** on-duty (not driving).
+- **1 hour for pickup** and **1 hour for dropoff**, each on-duty (not driving).
+
+**Hours-of-Service scope**
+- Property-carrying driver on the **70-hour / 8-day** cycle. The 60/7 cycle is shown on the
+  log form but not computed.
+- `current_cycle_used` **seeds** the 70-hour counter (never ignored).
+- **No adverse driving conditions** exemption is applied.
+- **Split sleeper-berth is not modeled** — only full **10-hour** off-duty resets are used.
+  This is the single biggest simplification; stated as a known limitation.
+
+**Data & accounts**
+- **No authentication / accounts** — trips are saved and fetched by `id` only; any `/trip/:id`
+  URL is shareable.
+- A trip's full computed result is stored as one JSON blob (no normalized schema) — sufficient
+  for read-back, simplest correct option for the scope.
+
+**Hosting**
+- Free tiers: the Render web service **sleeps after ~15 min idle** (~50s cold start on the next
+  request). The UI shows a loading state for this; a paid instance removes it.
+
 
 ---
 
@@ -59,45 +89,6 @@ npm run dev                   # http://localhost:5173
 
 ---
 
-## API
-
-- `POST /api/plan-trip/` — validate input, compute the plan, save a `Trip`, return it with `id`.
-- `GET /api/trips/<id>/` — fetch a saved trip's stored result.
-
----
-
-## Deploying to Render (frontend + backend) + Neon (Postgres)
-
-### 1. Create the database (Neon)
-1. Create a free project at [neon.tech], copy the **pooled** connection string
-   (`postgresql://…?sslmode=require`).
-
-### 2. Deploy both services (Render Blueprint)
-The repo ships a `render.yaml` that defines both services.
-
-1. In Render → **New → Blueprint**, point it at this repo. It creates:
-   - `spotter-eld-api` — Django web service (`./build.sh`, `gunicorn config.wsgi:application`)
-   - `spotter-eld-web` — Vite static site (`npm ci && npm run build`, publish `dist`, SPA rewrite)
-2. Set the env vars Render marks as required:
-
-   **spotter-eld-api**
-   | Key | Value |
-   |-----|-------|
-   | `DATABASE_URL` | the Neon pooled connection string |
-   | `ORS_API_KEY` | your OpenRouteService key |
-   | `CORS_ALLOWED_ORIGINS` | `https://spotter-eld-web.onrender.com` |
-   | `CSRF_TRUSTED_ORIGINS` | `https://spotter-eld-web.onrender.com` |
-
-   (`SECRET_KEY` is auto-generated; `DEBUG=false`; the API host is trusted automatically
-   via `RENDER_EXTERNAL_HOSTNAME`.)
-
-   **spotter-eld-web**
-   | Key | Value |
-   |-----|-------|
-   | `VITE_API_BASE_URL` | `https://spotter-eld-api.onrender.com` |
-
-3. `build.sh` runs `collectstatic` + `migrate` on each deploy. Whitenoise serves Django's
-   own static files.
 
 ### Notes
 - Render's free web service **sleeps after ~15 min idle** (~50s cold start). Hit the API
